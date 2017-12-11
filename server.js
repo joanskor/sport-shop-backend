@@ -26,12 +26,6 @@ app.use(function (req, res, next) {
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
 
-// app.use(multer({ dest: './uploads/',
-//     rename: function (fieldname, filename) {
-//       return filename;
-//     },
-// }))
-
 // PRODUCTS: 
 
 app.get('/products', function(req, res) {
@@ -79,8 +73,6 @@ app.get('/product/:id', function(req, res) {
 
 app.post('/product', jwtMid({secret: "secret"}), function(req, res) {
     var product = new Product(req.body);
-    // product.photos.data = fs.readFileSync(imgPath);
-    // product.photos.contentType = 'image/png';
     console.log(JSON.stringify(product));
     product.save(function(err) {
         if (err) {
@@ -132,11 +124,6 @@ app.put('/update/:id', function(req, res) {
 
 app.post('/discount', jwtMid({secret: "secret"}), function(req, res) {
     io.emit('messages' , { message: 'Pojawiły się nowe obniżki! Nie przegap okazji!!' });
-    // let countdown = req.body.discountTime*60000;
-    // setInterval(function() {  
-    //     countdown--;
-    //     io.sockets.emit('timer', { countdown: countdown });
-    //   }, 1000);
     return res.sendStatus(200);
 });
 
@@ -261,18 +248,6 @@ app.post('/register', function(req, res) {
     } 
 });
 
-// app.get('/logout', function(req, res) {
-//     if (req.session) {
-//         req.session.destroy(function(err) {
-//             if (err) {
-//                 return res.sendStatus(500);
-//             } else {
-//                 return res.redirect('/');
-//             }
-//         });
-//     }
-// });
-
 // ---------------------------------------
 
 io.on('connection' , function(client) {
@@ -286,7 +261,8 @@ server.listen(5000, function () {
     console.log("Listenieng on: http://%s:%s", host, port)
 });
 
-mongoose.connect('mongodb://admin:admin@ds127126.mlab.com:27126/sport_shop');
+mongoose.connect('mongodb://user:user@ds127126.mlab.com:27126/sport_shop');
+// mongoose.connect('mongodb://localhost/shop');
 var db = mongoose.connection;
 db.on('error', () => console.error('connection error'));
 db.on('open', function() {});
